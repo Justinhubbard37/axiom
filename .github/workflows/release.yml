@@ -268,6 +268,10 @@ jobs:
           # Matches axiom-<target>[.exe] AND axiom-hook-<target>[.exe].
           path: ${{ runner.temp }}/axiom-bin/axiom-*
           if-no-files-found: error
+          # 47 MB per target per release, previously on the 90-day default: these were
+          # the second largest contributor to the account's artifact storage
+          # (3.0 GB in dragoscv/axiom on 2026-11-16).
+          retention-days: 7
 
       - name: Legal notices (AXIOM LICENSE + bundled deps + embedded Node.js runtime)
         # The SEA binaries inline every runtime dependency of @codai/axiom-mcp and embed Node
@@ -292,6 +296,7 @@ jobs:
           name: axiom-legal
           path: ${{ runner.temp }}/axiom-legal/*
           if-no-files-found: error
+          retention-days: 7
 
   release-assets:
     name: SHA256SUMS + provenance → GitHub release
@@ -593,6 +598,7 @@ jobs:
           name: axiom-axm-vsix
           path: .copilot-tmp/axiom-axm-*.vsix
           if-no-files-found: error
+          retention-days: 7
           # upload-artifact ≥ 4.4 skips dot-directories unless told otherwise; the package script
           # writes into the gitignored `.copilot-tmp/` on purpose (never into the tree).
           include-hidden-files: true
